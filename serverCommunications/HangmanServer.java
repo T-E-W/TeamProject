@@ -81,9 +81,10 @@ public class HangmanServer extends AbstractServer
 	{
 
 		// If the argument is login data, do this below
-		if (arg0 instanceof LoginData)
+		System.out.println(arg0);
+		if (arg0 instanceof clientCommunications.LoginData)
 		{
-			LoginData loginData = (LoginData)arg0;
+			clientCommunications.LoginData loginData = (clientCommunications.LoginData) arg0;
 
 			System.out.println("Login Data Recieved By Server.");
 			Object contents;

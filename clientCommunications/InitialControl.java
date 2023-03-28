@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import clientUserInterface.*;
 
-
 public class InitialControl implements ActionListener
 {
   // Private data field for storing the container.

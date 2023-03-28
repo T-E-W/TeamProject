@@ -34,7 +34,7 @@ public class StartGamePanel extends JPanel
 		this.client = client;
 		this.container = container;
 	    // Create the controller and set it in the chat client.
-	    ContactControl contactControl = new ContactControl(container, client);
+	    GameControl contactControl = new GameControl(container, client);
 	    // client.setContactControl(contactControl);
 	    
 		// Create a panel for the labels at the top of the GUI.
