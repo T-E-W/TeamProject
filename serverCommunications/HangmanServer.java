@@ -1,188 +1,174 @@
 package serverCommunications;
 
-import ocsf.server.AbstractServer;
-import database.*;
-import ocsf.server.ConnectionToClient;
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
+
+import database.Database;
+
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 
 public class HangmanServer extends AbstractServer
 {
+	// Data fields for this chat server.
 	private JTextArea log;
 	private JLabel status;
-	private DatabaseFile accounts = new DatabaseFile();
-	// database object 
+	private boolean running = false;
+	//private DatabaseFile database = new DatabaseFile();
+	//Create the database object.
+	private Database database;// = new Database();
+	private String dml;
 
+	// Constructor for initializing the server with default settings.
 	public HangmanServer()
 	{
-		super(8300);
+		super(12345);
+		this.setTimeout(500);
 	}
 
+	// Getter that returns whether the server is currently running.
+	public boolean isRunning()
+	{
+		return running;
+	}
+
+	// Setters for the data fields corresponding to the GUI elements.
 	public void setLog(JTextArea log)
 	{
 		this.log = log;
 	}
-
-	public JTextArea getLog()
-	{
-		return log;
-	}
-
 	public void setStatus(JLabel status)
 	{
 		this.status = status;
 	}
-
-	public JLabel getStatus()
+	public void setDatabase(Database database)
 	{
-		return status;
+		this.database = database;
 	}
 
-
-
-	protected void serverStarted() 
+	// When the server starts, update the GUI.
+	public void serverStarted()
 	{
-		System.out.println("Server Started");
-		log.setText("Server Started\n");
-		status.setText("<html>Status: <font color='green'>LISTENING</font></html>");
+		running = true;
+		status.setText("Listening");
+		status.setForeground(Color.GREEN);
+		log.append("Server started\n");
 	}
 
-	protected void serverStopped() 
+	// When the server stops listening, update the GUI.
+	public void serverStopped()
 	{
-		System.out.println("Stopped button Pressed");
-		log.append("Server stopped Accepting New Clients - Press Listen to Start Accepting New Clients.\n");
-		status.setText("<html>Status: <font color='red'> STOPPED </font></html>");
+		status.setText("Stopped");
+		status.setForeground(Color.RED);
+		log.append("Server stopped accepting new clients - press Listen to start accepting new clients\n");
 	}
 
-	protected void serverClosed() 
+	// When the server closes completely, update the GUI.
+	public void serverClosed()
 	{
-		System.out.println("Closed Button Pressed");
-		log.append("Server and all current clients are closed - Press Listen To Restart.\n");
-		status.setText("<html>Status: <font color='red'> CLOSED </font></html>");
+		running = false;
+		status.setText("Close");
+		status.setForeground(Color.RED);
+		log.append("Server and all current clients are closed - press Listen to restart\n");
 	}
 
-
-	protected void clientConnected(ConnectionToClient client) 
+	// When a client connects or disconnects, display a message in the log.
+	public void clientConnected(ConnectionToClient client)
 	{
-
-		try {
-			client.sendToClient("INITIAL username:" + "client-" + client.getId());
-			log.append("Client " + "client-" + client.getId() + " Connected\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		log.append("Client " + client.getId() + " connected\n");
 	}
 
-
-	@Override
-	protected void handleMessageFromClient(Object arg0, ConnectionToClient client)
+	// When a message is received from a client, handle it.
+	public void handleMessageFromClient(Object arg0, ConnectionToClient arg1)
 	{
-
-		// If the argument is login data, do this below
-		System.out.println(arg0);
-		if (arg0 instanceof clientCommunications.LoginData)
+		// If we received LoginData, verify the account information.
+		if (arg0 instanceof LoginData)
 		{
-			clientCommunications.LoginData loginData = (clientCommunications.LoginData) arg0;
+			// Check the username and password with the database.
+			LoginData data = (LoginData)arg0;
+			Object result = "";
+			dml = "select username, aes_decrypt(password,'key') from User Where username = '" + 
+					data.getUsername() + "'and aes_decrypt(password, 'key')='"+ data.getPassword()+"'";
 
-			System.out.println("Login Data Recieved By Server.");
-			Object contents;
-			// test here to see if data matches database
-			if (accounts.isValid(loginData.getUsername(),loginData.getPassword())) 
+			// Do the query.
+			ArrayList<String> results = database.query(dml);
+
+			// Print the result.
+			if (results != null)
 			{
-				log.append("Good Account Data: " + loginData.getUsername() + ":" + loginData.getPassword() + "\n");
-				contents = "loginaccepted";
+				//for (String row : results)
+				//{
+				//	System.out.println(row);  
+				//}
+				result = "LoginSuccessful";
+				log.append("Client " + arg1.getId() + " successfully logged in as " + data.getUsername() + "\n");
+
 			}
 			else
 			{
-				log.append("Bad Login Data: " + loginData.getUsername() + ":" + loginData.getPassword() + "\n");
-				contents = "logindenied";
+				System.out.println("Error executing query.");
+				result = new Error("The username and password are incorrect.", "Login");
+				log.append("Client " + arg1.getId() + " failed to log in\n");
 			}
-			
-			
-			try {
-				client.sendToClient(contents);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
-		else if (arg0 instanceof CreateAccData)
-
-		{
-			System.out.println("Create Data Recieved By Server.");
-			CreateAccData createData = (CreateAccData)arg0;
-			//write new data to database
-			Object contents;
-			if (accounts.createAcc(createData.getUsername(), createData.getPassword()))
+			// Send the result to the client.
+			try
 			{
-				log.append("Account Created: " + createData.getUsername() + ":" + createData.getPassword() + "\n");
-				contents = "createaccepted";
+				arg1.sendToClient(result);
 			}
-			else
+			catch (IOException e)
 			{
-				log.append("Account NOT Created: " + createData.getUsername() + ":" + createData.getPassword() + "\n");
-				contents = "createdenied";
-
-			}
-
-			//send results to client
-			try {
-				client.sendToClient(contents);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 				return;
 			}
-
-		}
-		else if (arg0 instanceof ContactData)
-		{
-			ContactData contactData = (ContactData)arg0;
-			//write new data to database
-			String contact = contactData.getUsername() + ":" + contactData.getPassword();
-
-			System.out.println("Adding (" + contact + ") to contact list.");
 		}
 
-		else 
-
+		// If we received CreateAccountData, create a new account.
+		else if (arg0 instanceof CreateAccountData)
 		{
-			System.out.println("Client Message sent to Server");
+			// Try to create the account.
+			CreateAccountData data = (CreateAccountData)arg0;
+			Object result = "";
 
-			String contents = arg0.toString();
+			//create the dml statement for the insert
+			dml = "insert into user values('" + data.getUsername() + "',aes_encrypt('" +data.getPassword()+"','key'))";
 
-			log.append("Client " + client.getId() + ": " + contents + "\n");
+			// Run the DML.
+			try
+			{
+				database.executeDML(dml);
+				result = "CreateAccountSuccessful";
+				log.append("Client " + arg1.getId() + " created a new account called " + data.getUsername() + "\n");
+			}
+			catch(SQLException sql)
+			{
+				System.out.println("Error executing DML.");
+				result = new Error("The username is already in use.", "CreateAccount");
+				log.append("Client " + arg1.getId() + " failed to create a new account\n");
+			}
 
-			try {
-				client.sendToClient(contents);
-			} catch (IOException e) {
-				e.printStackTrace();
+			// Send the result to the client.
+			try
+			{
+				arg1.sendToClient(result);
+			}
+			catch (IOException e)
+			{
+				return;
 			}
 		}
-
 	}
 
-	protected void listeningException(Throwable exception) 
+	// Method that handles listening exceptions by displaying exception information.
+	public void listeningException(Throwable exception) 
 	{
-		//Display info about the exception
-		System.out.println("Listening Exception:" + exception);
-		exception.printStackTrace();
-		System.out.println(exception.getMessage());
-
-		if (!this.isListening())
-		{
-			log.append("Server not Listening\n");
-			status.setText("Not Connected");
-			status.setForeground(Color.RED);
-		}
-
+		running = false;
+		status.setText("Exception occurred while listening");
+		status.setForeground(Color.RED);
+		log.append("Listening exception: " + exception.getMessage() + "\n");
+		log.append("Press Listen to restart server\n");
 	}
-
-
-
-
-
 }

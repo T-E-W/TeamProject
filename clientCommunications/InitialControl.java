@@ -2,19 +2,21 @@ package clientCommunications;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
+
 import clientUserInterface.*;
+
+import java.awt.event.*;
 
 public class InitialControl implements ActionListener
 {
   // Private data field for storing the container.
   private JPanel container;
- 
+  private HangmanClient client;
   // Constructor for the initial controller.
-  public InitialControl(JPanel container)
+  public InitialControl(JPanel container, HangmanClient client)
   {
     this.container = container;
-   
+    this.client = client;
   }
   
   // Handle button clicks.
@@ -30,16 +32,16 @@ public class InitialControl implements ActionListener
       loginPanel.setError("");
       CardLayout cardLayout = (CardLayout)container.getLayout();
       cardLayout.show(container, "2");
+     
     }
     
     // The Create button takes the user to the create account panel.
     else if (command.equals("Create"))
     {
-      //Handle CreatAccount Here
-    	CreateAccPanel createPanel = (CreateAccPanel)container.getComponent(2);
-    	createPanel.setError("");
-    	CardLayout cardLayout = (CardLayout)container.getLayout();
-    	cardLayout.show(container, "3");
+      CreateAccountPanel createAccountPanel = (CreateAccountPanel)container.getComponent(2);
+      createAccountPanel.setError("");
+      CardLayout cardLayout = (CardLayout)container.getLayout();
+      cardLayout.show(container, "3");
     }
   }
 }

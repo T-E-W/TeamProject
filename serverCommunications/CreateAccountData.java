@@ -1,8 +1,8 @@
-package clientCommunications;
+package serverCommunications;
 
 import java.io.Serializable;
 
-public class LoginData implements Serializable 
+public class CreateAccountData implements Serializable 
 {
   // Private data fields for the username and password.
   private String username;
@@ -29,7 +29,7 @@ public class LoginData implements Serializable
   }
   
   // Constructor that initializes the username and password.
-  public LoginData(String username, String password)
+  public CreateAccountData(String username, String password)
   {
     setUsername(username);
     setPassword(password);

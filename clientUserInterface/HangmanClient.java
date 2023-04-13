@@ -1,96 +1,84 @@
 package clientUserInterface;
 
-import javax.swing.*;
 import clientCommunications.*;
 import ocsf.client.AbstractClient;
-//import ocsf.server.AbstractServer;
 
-/**
- * Chat Client Class, Extends AbstractClient from OCSF
- * @author timew
- *
- */
-public class HangmanClient extends AbstractClient{
+public class HangmanClient extends AbstractClient
+{
+  // Private data fields for storing the GUI controllers.
+  private LoginControl loginControl;
+  private CreateAccountControl createAccountControl;
+  private GameControl gameControl;
+  private ChooseGameControl chooseGameControl;
+  private StartGameControl startGameControl;
 
-	private LoginControl loginControl;
-	private CreateAccControl createControl;
+  // Setters for the GUI controllers.
+  public void setLoginControl(LoginControl loginControl)
+  {
+    this.loginControl = loginControl;
+  }
+  public void setCreateAccountControl(CreateAccountControl createAccountControl)
+  {
+    this.createAccountControl = createAccountControl;
+  }
+  public void setGameControl(GameControl gameControl)
+  {
+    this.gameControl = gameControl;
+  }
+  public void setChooseGameControl(ChooseGameControl chooseGameControl)
+  {
+    this.chooseGameControl = chooseGameControl;
+  }
+  public void setStartGameControl(StartGameControl startGameControl)
+  {
+    this.startGameControl = startGameControl;
+  }
 
-	/**
-	 * ChatClient Constructor (Parameterized)
-	 * @param host
-	 * @param port
-	 */
-	public HangmanClient(String host, int port)
-	{
-		super(host, port);
-	}
-
-	/**
-	 * ChatClient Constructor (Default)
-	 */
-	public HangmanClient() 
-	{		
-		super("localhost", 8300);
-	}
-	/**
-	 * Set the LoginControl object in chatclient
-	 * @param loginControl
-	 */
-	public void setLoginControl(LoginControl loginControl)
-	{
-		this.loginControl = loginControl;
-	}
-
-	/**
-	 * Set the CreateControl object instantiated in chatclient
-	 * @param cc
-	 */
-	public void setCreateControl(CreateAccControl cc)
-	{
-		this.createControl = cc;
-	}
-
-	/**
-	 *  Handle Messages From Server
-	 *  Object is message from Server
-	 */
-	protected void handleMessageFromServer(Object arg0)
-	{
-
-		/*
-		 * arg0 = "bad login"
-		 * 
-		 * if arg0 contains bad login
-		 * flag = false;
-		 */
-
-		//parse the username from the value and display id in the jtextfield
-		if (arg0 instanceof String)
-		{
-			// Get the text of the message.
-			String content = (String)arg0;
-
-			// If we successfully logged in, tell the login controller.
-			if (content.equals("loginaccepted"))
-			{
-				loginControl.loginSuccess();
-			}
-			// If we successfully created an account, tell the create account controller.
-			else if (content.equals("createaccepted"))
-			{
-				createControl.createSuccess();
-			}
-			// If we entered in the wrong account details, send that error to loginControl
-			else if (content.equals("logindenied"))
-			{
-				loginControl.displayError("Inavlid Login Credentials");
-			}
-			// If we entered in an existing Username, send that error to createControl
-			else if (content.equals("createdenied"))
-			{
-				createControl.displayError("Username Exists Already.");
-			}
-		}
-	}
+  // Constructor for initializing the client with default settings.
+  public HangmanClient()
+  {
+    super("localhost", 8300);
+  }
+  
+  // Method that handles messages from the server.
+  public void handleMessageFromServer(Object arg0)
+  {
+    // If we received a String, figure out what this event is.
+    if (arg0 instanceof String)
+    {
+      // Get the text of the message.
+      String message = (String)arg0;
+      
+      // If we successfully logged in, tell the login controller.
+      if (message.equals("LoginSuccessful"))
+      {
+        loginControl.loginSuccess();
+      }
+      
+      // If we successfully created an account, tell the create account controller.
+      else if (message.equals("CreateAccountSuccessful"))
+      {
+        createAccountControl.createAccountSuccess();
+      }
+    }
+    
+    // If we received an Error, figure out where to display it.
+    else if (arg0 instanceof Error)
+    {
+      // Get the Error object.
+      Error error = (Error)arg0;
+      
+      // Display login errors using the login controller.
+      if (error.getType().equals("Login"))
+      {
+        loginControl.displayError(error.getMessage());
+      }
+      
+      // Display account creation errors using the create account controller.
+      else if (error.getType().equals("CreateAccount"))
+      {
+        createAccountControl.displayError(error.getMessage());
+      }
+    }
+  }  
 }
-

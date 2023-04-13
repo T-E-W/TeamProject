@@ -1,8 +1,9 @@
 package clientUserInterface;
 
-import clientCommunications.*;
 import java.awt.*;
 import javax.swing.*;
+
+import clientCommunications.*;
 
 public class InitialPanel extends JPanel
 {

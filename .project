@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>serverCommunications/db.properties</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/db.properties</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
