@@ -7,6 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/timew/Desktop/Software Engineering/spring23/softwareTeamProject/ocsf.jar"/>
+	<classpathentry kind="lib" path="C:/Users/timew/Desktop/Software Engineering/spring23/mysql-connector-java-5.1.40-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/timew/Desktop/Software Engineering/spring23/softwareTeamProject/mysql-connector-java-5.1.40-bin.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

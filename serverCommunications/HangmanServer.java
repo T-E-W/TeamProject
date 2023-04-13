@@ -86,10 +86,12 @@ public class HangmanServer extends AbstractServer
 	public void handleMessageFromClient(Object arg0, ConnectionToClient arg1)
 	{
 		// If we received LoginData, verify the account information.
-		if (arg0 instanceof LoginData)
+		if (arg0 instanceof clientCommunications.LoginData)
 		{
 			// Check the username and password with the database.
-			LoginData data = (LoginData)arg0;
+			clientCommunications.LoginData data = (clientCommunications.LoginData) arg0;
+			
+			//LoginData data = (LoginData) arg0;
 			Object result = "";
 			dml = "select username, aes_decrypt(password,'key') from User Where username = '" + 
 					data.getUsername() + "'and aes_decrypt(password, 'key')='"+ data.getPassword()+"'";
@@ -127,7 +129,7 @@ public class HangmanServer extends AbstractServer
 		}
 
 		// If we received CreateAccountData, create a new account.
-		else if (arg0 instanceof CreateAccountData)
+		else if (arg0 instanceof clientCommunications.CreateAccountData)
 		{
 			// Try to create the account.
 			CreateAccountData data = (CreateAccountData)arg0;

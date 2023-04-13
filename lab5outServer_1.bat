@@ -1,2 +1,2 @@
-java -cp .;ocsf.jar serverCommunications.HangmanServerGUI
+java -cp .;ocsf.jar;mysql-connector-java-5.1.40-bin.jar serverCommunications.HangmanServerGUI
 pause
