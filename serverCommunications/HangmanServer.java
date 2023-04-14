@@ -171,7 +171,7 @@ public class HangmanServer extends AbstractServer
 				// if this string is a guess, we'll save it under guess
 				String guess = fromClient.replace("Guess:","");
 				
-				if(guess.length() == 1) 
+				if(guess.length() ==1) 
 				{
 					gData.setGuessedLetters(guess);
 				}
