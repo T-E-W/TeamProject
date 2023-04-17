@@ -8,6 +8,7 @@ import database.Database;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -179,11 +180,11 @@ public class HangmanServer extends AbstractServer
 				//checking to see if the guess is either a single character or string
 				if(guess.length() == 1) 
 				{
-					result = gameData.setGuessedLetters(guess);
+					result = gameData.setGuessedLetters(arg1.getId(), guess);
 				}
 				else if (guess.length() > 1) 
 				{
-					result = gameData.guessWord(guess);
+					result = gameData.guessWord(arg1.getId(), guess);
 				}
 				else
 				{
@@ -207,6 +208,12 @@ public class HangmanServer extends AbstractServer
 					e.printStackTrace();
 				}
 				
+			}
+			if(fromClient.contains("GuessWord:"))
+			{
+				String word = fromClient.replace("GuessWord:", "");
+				
+				gameData.setWord(arg1.getId(), word);
 			}
 			
 			

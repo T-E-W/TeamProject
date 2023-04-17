@@ -6,11 +6,25 @@ import java.util.*;
 public class GameData implements Serializable
 {
 	private ArrayList<String> guessedLetters;
-	private String word;
-	public boolean setGuessedLetters(String c)
+	
+	/*
+	 * HashMap that will Store Words based on ID. Unsure if this is necessary. 
+	 */
+	private HashMap<Long, String> words;
+	
+	
+	public void setWord(long l, String word) 
+	{
+		if(!words.containsKey(l)) 
+		{
+			words.put(l, word);
+		}
+	}
+	
+	public boolean setGuessedLetters(long l, String c)
 	{
 		//still need to differentiate between word and single chars
-		if(word.contains(c)) 
+		if(words.get(l).contains(c)) 
 		{
 			//display the letter, do not draw any gallows
 		}
@@ -25,16 +39,14 @@ public class GameData implements Serializable
 		return false;
 	}
 	
-	
-	
 	public ArrayList<String> getGuessedLetters()
 	{
 		return guessedLetters;
 	}
 	
-	public boolean guessWord(String guess)
+	public boolean guessWord(long l, String guess)
 	{
-		if(guess.equals(word))
+		if(words.get(l).equals(guess))
 		{
 			//show victory screen for player who guessed
 		}
@@ -46,4 +58,8 @@ public class GameData implements Serializable
 		return false;
 		
 	}
+
+
+
+
 }
