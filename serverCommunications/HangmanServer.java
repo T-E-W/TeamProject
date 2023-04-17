@@ -22,7 +22,7 @@ public class HangmanServer extends AbstractServer
 	//Create the database object.
 	private Database database;// = new Database();
 	private String dml;
-	private GameData gData;
+	private GameData gameData;
 
 	// Constructor for initializing the server with default settings.
 	public HangmanServer()
@@ -166,23 +166,53 @@ public class HangmanServer extends AbstractServer
 		else if (arg0 instanceof String)
 		{
 			String fromClient = (String) arg0;
+			
+			
+			// if this string contains guess, it is a guess, so handle as guess
 			if(fromClient.contains("Guess:"))
 			{
 				// if this string is a guess, we'll save it under guess
 				String guess = fromClient.replace("Guess:","");
+				Boolean result = false;
 				
-				if(guess.length() ==1) 
+				
+				//checking to see if the guess is either a single character or string
+				if(guess.length() == 1) 
 				{
-					gData.setGuessedLetters(guess);
+					result = gameData.setGuessedLetters(guess);
 				}
 				else if (guess.length() > 1) 
 				{
-					gData.guessWord(guess);
+					result = gameData.guessWord(guess);
+				}
+				else
+				{
+					Error error = new Error("Bad game message sent to server", "Game");
+					try {
+						arg1.sendToClient(error);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}
 				
 				
+				// send the results back to the client.
+				try {
+					log.append("Guess is " + result);
+					arg1.sendToClient(result);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
+			
+			
 		}
+		
+		
 	}
 
 	// Method that handles listening exceptions by displaying exception information.

@@ -3,6 +3,7 @@ package clientCommunications;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 
@@ -29,8 +30,23 @@ public class StartGameControl implements ActionListener
 		// The Login button takes the user to the login panel.
 		if (command.equals("Start"))
 		{
-			//GamePanel GamePanel = (GamePanel)container.getComponent(4);
+			StartGamePanel sGp = (StartGamePanel)container.getComponent(5);
 			//chooseGamePanel.setGuessStatus("");
+			String word = sGp.getWord();
+			
+			
+			/* 
+			 * How do we differentiate between either users word? 
+			 * HashMap? UserID + Word?
+			 */
+			try {
+				client.sendToServer(word);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 			
 			CardLayout cardLayout = (CardLayout)container.getLayout();
 			cardLayout.show(container, "6");

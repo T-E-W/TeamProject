@@ -79,6 +79,10 @@ public class HangmanClient extends AbstractClient
       {
         createAccountControl.displayError(error.getMessage());
       }
+      else if (error.getType().equals("Game"))
+      {
+    	  gameControl.displayError(error.getMessage());
+      }
     }
   }  
 }
