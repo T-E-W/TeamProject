@@ -21,6 +21,7 @@ public class HangmanServerGUI extends JFrame
   private JButton quit;
   private HangmanServer server;
   private Database database;
+  private GameData gameData;
 
   // Constructor for the server GUI.
 	public HangmanServerGUI()
@@ -108,6 +109,7 @@ public class HangmanServerGUI extends JFrame
     server.setLog(log);
     server.setStatus(status);
     database = new Database();
+    gameData = new GameData();
     server.setDatabase(database);
 	}
 	

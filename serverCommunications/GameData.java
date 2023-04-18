@@ -8,10 +8,15 @@ public class GameData implements Serializable
 	private ArrayList<String> guessedLetters;
 	
 	/*
-	 * HashMap that will Store Words based on ID. Unsure if this is necessary. 
+	 * HashMap that will Store Words based on ID. But then somehow we have to figure out how to 
 	 */
 	private HashMap<Long, String> words;
 	
+	
+	public GameData()
+	{
+		words = new HashMap<Long, String>();
+	}
 	
 	public void setWord(long l, String word) 
 	{

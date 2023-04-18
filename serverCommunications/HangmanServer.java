@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import database.Database;
+import clientCommunications.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,6 +24,14 @@ public class HangmanServer extends AbstractServer
 	//Create the database object.
 	private Database database;// = new Database();
 	private String dml;
+	
+	private String player1Word;
+	private String player2Word;
+	private int player1IncorrectGuesses;
+	private int player2IncorrectGuesses;
+	
+	private ArrayList<User> onlineUsers = new ArrayList<User>();
+	
 	private GameData gameData;
 
 	// Constructor for initializing the server with default settings.
@@ -92,7 +101,7 @@ public class HangmanServer extends AbstractServer
 		{
 			// Check the username and password with the database.
 			clientCommunications.LoginData data = (clientCommunications.LoginData) arg0;
-			
+
 			//LoginData data = (LoginData) arg0;
 			Object result = "";
 			dml = "select username, aes_decrypt(password,'key') from User Where username = '" + 
@@ -167,16 +176,16 @@ public class HangmanServer extends AbstractServer
 		else if (arg0 instanceof String)
 		{
 			String fromClient = (String) arg0;
-			
-			
+
+
 			// if this string contains guess, it is a guess, so handle as guess
 			if(fromClient.contains("Guess:"))
 			{
 				// if this string is a guess, we'll save it under guess
 				String guess = fromClient.replace("Guess:","");
 				Boolean result = false;
-				
-				
+
+
 				//checking to see if the guess is either a single character or string
 				if(guess.length() == 1) 
 				{
@@ -195,10 +204,10 @@ public class HangmanServer extends AbstractServer
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 				}
-				
-				
+
+
 				// send the results back to the client.
 				try {
 					log.append("Guess is " + result);
@@ -207,19 +216,33 @@ public class HangmanServer extends AbstractServer
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
-			if(fromClient.contains("GuessWord:"))
+			else if(fromClient.contains("PlayerWord:"))
 			{
-				String word = fromClient.replace("GuessWord:", "");
+				String word = fromClient.replace("PlayerWord:", "");
+
+				ConnectionToClient client = (ConnectionToClient)arg1;
 				
-				gameData.setWord(arg1.getId(), word);
+
+				try {
+					gameData.setWord(client.getId(), word);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					arg1.sendToClient(word);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
-			
+
+
 		}
-		
-		
+
+
 	}
 
 	// Method that handles listening exceptions by displaying exception information.

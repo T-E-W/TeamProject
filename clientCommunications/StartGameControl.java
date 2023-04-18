@@ -30,15 +30,28 @@ public class StartGameControl implements ActionListener
 		// The Login button takes the user to the login panel.
 		if (command.equals("Start"))
 		{
-			StartGamePanel sGp = (StartGamePanel)container.getComponent(5);
+			StartGamePanel sGp = (StartGamePanel)container.getComponent(4);
 			//chooseGamePanel.setGuessStatus("");
 			String word = sGp.getWord();
+			
+			
+			// check for word length
+			if(word.length() != 8)
+			{
+				sGp.setError("Word must be 8 characters long.");
+				return;
+			}
+			
+				
+			word = "PlayerWord:" + sGp.getWord();
 			
 			
 			/* 
 			 * How do we differentiate between either users word? 
 			 * HashMap? UserID + Word?
 			 */
+			
+			
 			try {
 				client.sendToServer(word);
 			} catch (IOException e) {
@@ -66,6 +79,11 @@ public class StartGameControl implements ActionListener
 			CardLayout cardLayout = (CardLayout)container.getLayout();
 			cardLayout.show(container, "4");
 		}
+	}
+
+	private void displayError(String string) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
