@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -34,7 +35,7 @@ public class GameControl implements ActionListener
 		if (command == "Guess")
 		{
 
-			
+
 			GamePanel gamePanel = (GamePanel)container.getComponent(5);
 
 			if(gamePanel.getGuess().length() < 1) 
@@ -45,9 +46,9 @@ public class GameControl implements ActionListener
 
 			String guessString = "Guess:" + gamePanel.getGuess();
 			System.out.println(guessString);
-			
 
-			
+
+
 			//send to server
 			try
 			{
@@ -61,10 +62,36 @@ public class GameControl implements ActionListener
 		}
 	}
 
+
+
 	// Method that displays a message in the error label.
 	public void displayError(String error)
 	{
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
 		gamePanel.setGuessStatus(error);
 	}
+
+	public void displayGallows() {
+		// TODO Auto-generated method stub
+		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+		//gamePanel.set
+	}
+	public void displayLetter(String string) {
+		// TODO Auto-generated method stub
+		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+		
+		gamePanel.correctGuess(string, 0);
+	}
+	public void winScenario() {
+		// TODO Auto-generated method stub
+		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+	}
+
+	public void loseScenario() {
+		// TODO Auto-generated method stub
+		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+	}
+
+
+
 }

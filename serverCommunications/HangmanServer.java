@@ -4,15 +4,17 @@ import java.awt.*;
 import javax.swing.*;
 
 import database.Database;
+import clientCommunications.Error;
 import clientCommunications.*;
+
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
+import ocsf.server.*;
 
 public class HangmanServer extends AbstractServer
 {
@@ -24,15 +26,7 @@ public class HangmanServer extends AbstractServer
 	//Create the database object.
 	private Database database;// = new Database();
 	private String dml;
-	
-	private String player1Word;
-	private String player2Word;
-	private int player1IncorrectGuesses;
-	private int player2IncorrectGuesses;
-	
-	private ArrayList<User> onlineUsers = new ArrayList<User>();
-	
-	private GameData gameData;
+	private ArrayList<User> onlinePlayers = new ArrayList<User>();
 
 	// Constructor for initializing the server with default settings.
 	public HangmanServer()
@@ -90,17 +84,25 @@ public class HangmanServer extends AbstractServer
 	// When a client connects or disconnects, display a message in the log.
 	public void clientConnected(ConnectionToClient client)
 	{
+
 		log.append("Client " + client.getId() + " connected\n");
+		try {
+			client.sendToClient(client.getId());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// When a message is received from a client, handle it.
 	public void handleMessageFromClient(Object arg0, ConnectionToClient arg1)
 	{
 		// If we received LoginData, verify the account information.
-		if (arg0 instanceof clientCommunications.LoginData)
+		if (arg0 instanceof LoginData)
 		{
 			// Check the username and password with the database.
-			clientCommunications.LoginData data = (clientCommunications.LoginData) arg0;
+			LoginData data = (LoginData) arg0;
+
 
 			//LoginData data = (LoginData) arg0;
 			Object result = "";
@@ -118,6 +120,11 @@ public class HangmanServer extends AbstractServer
 				//	System.out.println(row);  
 				//}
 				result = "LoginSuccessful";
+
+				User user = new User(data.getUsername(), data.getPassword(), arg1.getId());
+
+				onlinePlayers.add(user);
+
 				log.append("Client " + arg1.getId() + " successfully logged in as " + data.getUsername() + "\n");
 
 			}
@@ -153,8 +160,14 @@ public class HangmanServer extends AbstractServer
 			try
 			{
 				database.executeDML(dml);
+
 				result = "CreateAccountSuccessful";
+
 				log.append("Client " + arg1.getId() + " created a new account called " + data.getUsername() + "\n");
+
+				User user = new User(data.getUsername(), data.getPassword(), arg1.getId());
+				onlinePlayers.add(user);
+
 			}
 			catch(SQLException sql)
 			{
@@ -184,16 +197,28 @@ public class HangmanServer extends AbstractServer
 				// if this string is a guess, we'll save it under guess
 				String guess = fromClient.replace("Guess:","");
 				Boolean result = false;
-
+				int index = 0;
+				
+				Long pid = arg1.getId();
+				
+				User user = new User();
+				
+				for(User u:onlinePlayers)
+				{
+					if(u.getID() != pid)
+					{
+						user = u;
+					}
+				}
 
 				//checking to see if the guess is either a single character or string
 				if(guess.length() == 1) 
 				{
-					result = gameData.setGuessedLetters(arg1.getId(), guess);
+					result = user.getWord().contains(guess);
 				}
 				else if (guess.length() > 1) 
 				{
-					result = gameData.guessWord(arg1.getId(), guess);
+					result = user.getWord().equals(guess);
 				}
 				else
 				{
@@ -208,14 +233,9 @@ public class HangmanServer extends AbstractServer
 				}
 
 
-				// send the results back to the client.
-				try {
-					log.append("Guess is " + result);
-					arg1.sendToClient(result);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				log.append("Guess is " + result);
+				
+				sendToAllClients("GuessResult:" + guess + ":" + result);
 
 			}
 			else if(fromClient.contains("PlayerWord:"))
@@ -223,16 +243,50 @@ public class HangmanServer extends AbstractServer
 				String word = fromClient.replace("PlayerWord:", "");
 
 				ConnectionToClient client = (ConnectionToClient)arg1;
-				
 
-				try {
-					gameData.setWord(client.getId(), word);
-				} catch (Exception e) {
-					e.printStackTrace();
+				Long pid = arg1.getId();
+				
+				User user;
+				
+				for(User u:onlinePlayers)
+				{
+					if(u.getID() == pid)
+					{
+						user = u;
+						user.setWord(word);
+						break;
+					}
 				}
 
 				try {
 					arg1.sendToClient(word);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if(fromClient.contains("Logout:"))
+			{
+				String username = fromClient.substring(8);
+				for (int i = 0; i < onlinePlayers.size(); i++)
+				{
+					if (onlinePlayers.get(i).getUsername().equals(username))	
+						onlinePlayers.remove(i);
+				}
+				String toClient = "Online:";
+				for (int i = 0; i < onlinePlayers.size(); i++)
+				{
+					toClient += onlinePlayers.get(i).getUsername();
+					if (i + 1 < onlinePlayers.size()) 
+					{
+						toClient += ",";
+					}
+				}
+				
+				sendToAllClients(toClient);
+				
+				try {
+					arg1.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

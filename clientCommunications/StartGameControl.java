@@ -14,6 +14,7 @@ public class StartGameControl implements ActionListener
 	// Private data field for storing the container.
 	private JPanel container;
 	private HangmanClient client;
+	private User player;
 	// Constructor for the initial controller.
 	public StartGameControl(JPanel container, HangmanClient client)
 	{
@@ -45,6 +46,7 @@ public class StartGameControl implements ActionListener
 				
 			word = "PlayerWord:" + sGp.getWord();
 			
+		
 			
 			/* 
 			 * How do we differentiate between either users word? 
