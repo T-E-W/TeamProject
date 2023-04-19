@@ -62,13 +62,24 @@ public class HangmanClient extends AbstractClient
 			}
 			else if (message.contains("GuessResult:"))
 			{
-				// message comes in as "GuessResult:guess:true"
+				// message comes in as "GuessResult:guess:true:indexes"
 				// First, remove GuessResult:, then split at ':', then if msgParts[0] is a single character, and msgParts[1] is
 				// equal to true, then it's a letter to be displayed.
+				
 				// if true and more than 1 char, it's a win scenario
 				// else, its a draw gallows scenario
 				
+				// msgParts[2] is now the occuring indexes of the letter guessed if it does exist in the word.
+				// If the letter is not in the word, then the index value will be "99"
+				
+				// "GuessResult:guess:true:indexes"
+				// "GuessResult:a:true:3,4,6,7"
+				
 				message = message.replace("GuessResult:", "");
+				
+				// "msgParts[0] = a   
+				//  true      
+				//  2,3,4,5"
 				
 				String[] msgParts = message.strip().split(":");
 				
@@ -78,7 +89,7 @@ public class HangmanClient extends AbstractClient
 				if(msgParts[0].length() == 1 && msgParts[1].equals("true"))
 				{
 					// display letter, we need to know the index of this letter. 
-					gameControl.displayLetter(msgParts[0]);
+					gameControl.displayLetter(msgParts[0], msgParts[2]);
 				}
 				else if(msgParts[0].length() > 1 && msgParts[1].equals("true"))
 				{

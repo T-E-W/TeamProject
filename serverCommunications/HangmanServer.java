@@ -198,12 +198,12 @@ public class HangmanServer extends AbstractServer
 				String guess = fromClient.replace("Guess:","");
 				Boolean result = false;
 				int index = 0;
-				
+
 				Long pid = arg1.getId();
-				
+
 				User user = new User();
-				
-				
+
+
 				for(User u:onlinePlayers)
 				{
 					if(u.getID() != pid)
@@ -212,14 +212,39 @@ public class HangmanServer extends AbstractServer
 					}
 				}
 
+				String indexes = "";
+
 				//checking to see if the guess is either a single character or string
 				if(guess.length() == 1) 
 				{
 					result = user.getWord().contains(guess);
+
+
+					if (result == true)
+					{
+
+						String word = user.getWord();
+
+						char c = guess.charAt(0);
+
+						for (int i = 0; i < user.getWord().length(); i++) 
+						{
+							if (word.charAt(i) == (c))
+							{
+								if (indexes.length()==0)
+									indexes += i;
+								else
+									indexes += "," + i;
+
+							}
+						}
+					}
+
 				}
 				else if (guess.length() > 1) 
 				{
 					result = user.getWord().equals(guess);
+					indexes = "99";
 				}
 				else
 				{
@@ -234,11 +259,13 @@ public class HangmanServer extends AbstractServer
 				}
 
 
-				log.append("Guess is " + result);
-				
+				log.append("Guess is " + result + " at indexes " + indexes);
+
+
+
 				try {
-					log.append("GuessResult:" + guess + ":" + result);
-					arg1.sendToClient("GuessResult:" + guess + ":" + result);
+					log.append("GuessResult:" + guess + ":" + result + ":" + indexes);
+					arg1.sendToClient("GuessResult:" + guess + ":" + result + ":" + indexes);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -252,9 +279,9 @@ public class HangmanServer extends AbstractServer
 				ConnectionToClient client = (ConnectionToClient)arg1;
 
 				Long pid = arg1.getId();
-				
+
 				User user;
-				
+
 				for(User u:onlinePlayers)
 				{
 					if(u.getID() == pid)
@@ -289,9 +316,9 @@ public class HangmanServer extends AbstractServer
 						toClient += ",";
 					}
 				}
-				
+
 				sendToAllClients(toClient);
-				
+
 				try {
 					arg1.close();
 				} catch (IOException e) {
@@ -301,7 +328,7 @@ public class HangmanServer extends AbstractServer
 			}
 			else if(fromClient.contains("NewGame:"))
 			{
-				
+
 			}
 
 

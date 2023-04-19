@@ -76,12 +76,14 @@ public class GameControl implements ActionListener
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
 		//gamePanel.set
 	}
-	public void displayLetter(String string) {
+	
+	public void displayLetter(String string, String indexes) {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
-		
-		gamePanel.correctGuess(string, 0);
+		gamePanel.printLetters(string, indexes);	
 	}
+	
+	
 	public void winScenario() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);

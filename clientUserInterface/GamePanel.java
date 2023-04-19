@@ -35,13 +35,22 @@ public class GamePanel extends JPanel
 		guess = guess + letter;
 		guessTextField.setText(guess);
 	}
-	public void correctGuess(String c, int index)
+	public void printLetters(String c, String index)
 	{
 		/*
 		 * This is required to show the correct img of a letter once you correctly guess. 
 		 * The index is for referencing which position the correct letter is in to display
 		 * the correct letter in the correct spot.
 		 */
+		
+		String[] indexes = index.strip().split(",");
+		
+		/*
+		 *  indexes above should contain all indexes of the guesses letter, it is in string format, so casting to integer is necessary.
+		 */
+		int i = Integer.parseInt(indexes[0]);
+
+		
 	}
 
 
