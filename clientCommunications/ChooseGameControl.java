@@ -6,6 +6,7 @@ import javax.swing.*;
 import clientUserInterface.*;
 
 import java.awt.event.*;
+import java.io.IOException;
 
 public class ChooseGameControl implements ActionListener
 {
@@ -32,6 +33,13 @@ public class ChooseGameControl implements ActionListener
       //chooseGamePanel.setGuessStatus("");
       CardLayout cardLayout = (CardLayout)container.getLayout();
       cardLayout.show(container, "5");
+      
+      try {
+		client.sendToServer("NewGame:");
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
      
     }
     

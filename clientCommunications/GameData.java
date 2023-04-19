@@ -18,8 +18,9 @@ public class GameData implements Serializable
 
 	public GameData()
 	{
-
+		
 	}
+	
 	public ArrayList<String> getGuessedLetters()
 	{
 		return guessedLetters;
@@ -77,8 +78,4 @@ public class GameData implements Serializable
 		return false;
 
 	}
-
-
-
-
 }

@@ -203,6 +203,7 @@ public class HangmanServer extends AbstractServer
 				
 				User user = new User();
 				
+				
 				for(User u:onlinePlayers)
 				{
 					if(u.getID() != pid)
@@ -235,7 +236,13 @@ public class HangmanServer extends AbstractServer
 
 				log.append("Guess is " + result);
 				
-				sendToAllClients("GuessResult:" + guess + ":" + result);
+				try {
+					log.append("GuessResult:" + guess + ":" + result);
+					arg1.sendToClient("GuessResult:" + guess + ":" + result);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 			else if(fromClient.contains("PlayerWord:"))
@@ -291,6 +298,10 @@ public class HangmanServer extends AbstractServer
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+			else if(fromClient.contains("NewGame:"))
+			{
+				
 			}
 
 
