@@ -21,6 +21,7 @@ public class GamePanel extends JPanel
 	private String currentGallowPic;
 	private String guess = "";
 	private JButton[] letterButtons;
+	private JLabel[] gameWordLabels;
 
 	public void setGuessStatus(String msg)
 	{
@@ -72,7 +73,7 @@ public class GamePanel extends JPanel
 		//game word to guess
 		JPanel gameWordPanel = new JPanel(new GridLayout(1, 8, 5, 5));
 		gameWordPanel.setBackground(new Color(255, 255, 255));
-		JLabel[] gameWordLabels = new JLabel[gameWord.length()];
+		gameWordLabels = new JLabel[gameWord.length()];
 		for (i = 0; i < gameWord.length(); i++)
 		{
 			//JLabel[] gameWordLabels = new JLabel[gameWord.length()];//("", JLabel.CENTER);
