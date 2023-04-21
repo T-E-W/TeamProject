@@ -11,6 +11,7 @@ import clientCommunications.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -24,7 +25,7 @@ public class HangmanServer extends AbstractServer
 	private boolean running = false;
 	//private DatabaseFile database = new DatabaseFile();
 	//Create the database object.
-	private Database database;// = new Database();
+	private Database database;  // = new Database();
 	private String dml;
 	private ArrayList<User> onlinePlayers = new ArrayList<User>();
 
@@ -147,7 +148,7 @@ public class HangmanServer extends AbstractServer
 		}
 
 		// If we received CreateAccountData, create a new account.
-		else if (arg0 instanceof clientCommunications.CreateAccountData)
+		else if (arg0 instanceof CreateAccountData)
 		{
 			// Try to create the account.
 			CreateAccountData data = (CreateAccountData)arg0;
@@ -258,13 +259,21 @@ public class HangmanServer extends AbstractServer
 
 				}
 
+				String username = null;
+				for(int i = 0; i < onlinePlayers.size(); i++)
+				{
+					if(onlinePlayers.get(i).getID() == pid)
+					{
+						username = onlinePlayers.get(i).getUsername();
+					}
+				}
+				
+				log.append("Guess made by " + username + " is " + result + " at indexes " + indexes + "\n");
 
-				log.append("Guess is " + result + " at indexes " + indexes);
-
-
+				
 
 				try {
-					log.append("GuessResult:" + guess + ":" + result + ":" + indexes);
+					log.append("GuessResult:" + guess + ":" + result + ":" + indexes + "\n");
 					arg1.sendToClient("GuessResult:" + guess + ":" + result + ":" + indexes);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -275,8 +284,6 @@ public class HangmanServer extends AbstractServer
 			else if(fromClient.contains("PlayerWord:"))
 			{
 				String word = fromClient.replace("PlayerWord:", "");
-
-				ConnectionToClient client = (ConnectionToClient)arg1;
 
 				Long pid = arg1.getId();
 
@@ -346,4 +353,5 @@ public class HangmanServer extends AbstractServer
 		log.append("Listening exception: " + exception.getMessage() + "\n");
 		log.append("Press Listen to restart server\n");
 	}
+	
 }
