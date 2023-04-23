@@ -195,7 +195,7 @@ public class HangmanServer extends AbstractServer
 			if(fromClient.contains("Guess:"))
 			{
 				// if this string is a guess, we'll save it under guess
-				String guess = fromClient.replace("Guess:","");
+				String guess = fromClient.replace("Guess:","").toLowerCase();
 				Boolean result = false;
 				int index = 0;
 
@@ -215,6 +215,7 @@ public class HangmanServer extends AbstractServer
 				String indexes = "";
 
 				//checking to see if the guess is either a single character or string
+				
 				if(guess.length() == 1) 
 				{
 					result = user.getWord().contains(guess);
