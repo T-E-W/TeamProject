@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -36,8 +37,6 @@ public class GameControl implements ActionListener
 
 		if (command == "Guess")
 		{
-
-			counter += 1;
 			GamePanel gamePanel = (GamePanel)container.getComponent(5);
 
 			if(gamePanel.getGuess().length() < 1) 
@@ -76,7 +75,7 @@ public class GameControl implements ActionListener
 	public void displayGallows() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
-
+		counter += 1;
 		Boolean isGameOver = gamePanel.printGallows();
 
 		if(isGameOver)
@@ -110,18 +109,22 @@ public class GameControl implements ActionListener
 	public void displayLetter(String string, String indexes) {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
-		boolean winFlag;
+		boolean winFlag = false;
 		winFlag = gamePanel.printLetters(string, indexes);
+		
+		
+		if (winFlag == true) {
+			try
+			{
+				client.sendToServer("Win:" + winFlag);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				displayError("Error connecting to the server.");
+			}
+		}
 
-		try
-		{
-			client.sendToServer("Win:" + winFlag);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			displayError("Error connecting to the server.");
-		}
 	}
 
 
@@ -141,6 +144,7 @@ public class GameControl implements ActionListener
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
 		displayError("Loser!!!");
+		gamePanel.setGallows("11");
 		try {
 			client.sendToServer("Lose:");
 		} catch (IOException e) {

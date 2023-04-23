@@ -39,6 +39,7 @@ public class HangmanClient extends AbstractClient
 	public HangmanClient()
 	{
 		super("localhost", 8300);
+		loseFlag = true;
 	}
 
 	// Method that handles messages from the server.
@@ -95,6 +96,7 @@ public class HangmanClient extends AbstractClient
 				else if(msgParts[0].length() > 1 && msgParts[1].equals("true"))
 				{
 					gameControl.winScenario();
+					loseFlag = false;
 				}
 				else
 				{

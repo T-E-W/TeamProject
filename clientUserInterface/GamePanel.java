@@ -13,7 +13,7 @@ import clientCommunications.*;
 
 public class GamePanel extends JPanel
 {
-	private String[] letterLabels = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+	private String[] letterLabels = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	private String gameWord = "TESTWORD";
 	private JLabel gallowStatusLabel;
 	private String gallowStatus = "Your Gallow Status";
@@ -40,6 +40,10 @@ public class GamePanel extends JPanel
 	{
 		guess = guess + letter;
 		guessTextField.setText(guess);
+	}
+	public void setGallows(String gallow)
+	{
+		gallows.setIcon(new ImageIcon(ChooseGamePanel.class.getResource("/clientUserInterface/" + gallow + ".jpg")));
 	}
 
 	public void loseGame()
