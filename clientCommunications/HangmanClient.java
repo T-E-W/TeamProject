@@ -11,6 +11,7 @@ public class HangmanClient extends AbstractClient
 	private GameControl gameControl;
 	private ChooseGameControl chooseGameControl;
 	private StartGameControl startGameControl;
+	private boolean loseFlag;
 
 	// Setters for the GUI controllers.
 	public void setLoginControl(LoginControl loginControl)
@@ -97,10 +98,24 @@ public class HangmanClient extends AbstractClient
 				}
 				else
 				{
-					//if(numGuesses < allowedGuesses)
 					gameControl.displayGallows();
-					//else
-					//gameControl.loseScenario();
+				}
+			}
+			else if (message.contains("Lose"))
+			{
+				// lose game screen
+				loseFlag = true;
+			}
+			else if (message.contains("GameOver"))
+			{
+				// Game over screen
+				if(loseFlag != true)
+				{
+					gameControl.winScenario();
+				}
+				else
+				{
+					gameControl.loseScenario();
 				}
 			}
 			

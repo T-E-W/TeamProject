@@ -11,7 +11,6 @@ import clientCommunications.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -25,7 +24,7 @@ public class HangmanServer extends AbstractServer
 	private boolean running = false;
 	//private DatabaseFile database = new DatabaseFile();
 	//Create the database object.
-	private Database database;  // = new Database();
+	private Database database;// = new Database();
 	private String dml;
 	private ArrayList<User> onlinePlayers = new ArrayList<User>();
 
@@ -148,7 +147,7 @@ public class HangmanServer extends AbstractServer
 		}
 
 		// If we received CreateAccountData, create a new account.
-		else if (arg0 instanceof CreateAccountData)
+		else if (arg0 instanceof clientCommunications.CreateAccountData)
 		{
 			// Try to create the account.
 			CreateAccountData data = (CreateAccountData)arg0;
@@ -196,7 +195,7 @@ public class HangmanServer extends AbstractServer
 			if(fromClient.contains("Guess:"))
 			{
 				// if this string is a guess, we'll save it under guess
-				String guess = fromClient.replace("Guess:","");
+				String guess = fromClient.replace("Guess:","").toLowerCase();
 				Boolean result = false;
 				int index = 0;
 
@@ -216,6 +215,7 @@ public class HangmanServer extends AbstractServer
 				String indexes = "";
 
 				//checking to see if the guess is either a single character or string
+				
 				if(guess.length() == 1) 
 				{
 					result = user.getWord().contains(guess);
@@ -259,18 +259,10 @@ public class HangmanServer extends AbstractServer
 
 				}
 
-				String username = null;
-				for(int i = 0; i < onlinePlayers.size(); i++)
-				{
-					if(onlinePlayers.get(i).getID() == pid)
-					{
-						username = onlinePlayers.get(i).getUsername();
-					}
-				}
-				
-				log.append("Guess made by " + username + " is " + result + " at indexes " + indexes + "\n");
 
-				
+				log.append("Guess is " + result + " at indexes " + indexes + "\n");
+
+
 
 				try {
 					log.append("GuessResult:" + guess + ":" + result + ":" + indexes + "\n");
@@ -284,6 +276,8 @@ public class HangmanServer extends AbstractServer
 			else if(fromClient.contains("PlayerWord:"))
 			{
 				String word = fromClient.replace("PlayerWord:", "");
+
+				ConnectionToClient client = (ConnectionToClient)arg1;
 
 				Long pid = arg1.getId();
 
@@ -333,14 +327,26 @@ public class HangmanServer extends AbstractServer
 					e.printStackTrace();
 				}
 			}
-			else if(fromClient.contains("NewGame:"))
+			else if(fromClient.contains("Lose:"))
 			{
-
+				try {
+					arg1.sendToClient("Lose");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				sendToAllClients("GameOver");
 			}
 			
-			else if(fromClient.contains("JoinGame:"))
+			else if(fromClient.contains("Win:"))
 			{
-
+				try {
+					arg1.sendToClient("Win");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				sendToAllClients("GameOver");
 			}
 
 
@@ -358,5 +364,4 @@ public class HangmanServer extends AbstractServer
 		log.append("Listening exception: " + exception.getMessage() + "\n");
 		log.append("Press Listen to restart server\n");
 	}
-	
 }

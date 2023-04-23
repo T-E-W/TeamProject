@@ -17,12 +17,14 @@ public class GameControl implements ActionListener
 	private JPanel container;
 	private HangmanClient client;
 	private JTextField guessTextField;
+	private int counter;
 
 	// Constructor for the login controller.
 	public GameControl(JPanel container, HangmanClient client)
 	{
 		this.container = container;
 		this.client = client;
+		this.counter = 0;
 		//this.guessTextField = guessTextField;
 	}
 
@@ -35,7 +37,7 @@ public class GameControl implements ActionListener
 		if (command == "Guess")
 		{
 
-
+			counter += 1;
 			GamePanel gamePanel = (GamePanel)container.getComponent(5);
 
 			if(gamePanel.getGuess().length() < 1) 
@@ -74,24 +76,77 @@ public class GameControl implements ActionListener
 	public void displayGallows() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+
+		Boolean isGameOver = gamePanel.printGallows();
+
+		if(isGameOver)
+		{
+			try
+			{
+				client.sendToServer("Lose:" + isGameOver);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				displayError("Error connecting to the server.");
+			}
+		}
+		else if(counter >= 11)
+		{
+			try
+			{
+				client.sendToServer("Lose:");
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				displayError("Error connecting to the server.");
+			}
+		}
+
 		//gamePanel.set
 	}
-	
+
 	public void displayLetter(String string, String indexes) {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
-		gamePanel.printLetters(string, indexes);	
+		boolean winFlag;
+		winFlag = gamePanel.printLetters(string, indexes);
+
+		try
+		{
+			client.sendToServer("Win:" + winFlag);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			displayError("Error connecting to the server.");
+		}
 	}
-	
-	
+
+
 	public void winScenario() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+		displayError("Winner Winner!");
+		try {
+			client.sendToServer("Win:");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void loseScenario() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+		displayError("Loser!!!");
+		try {
+			client.sendToServer("Lose:");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
