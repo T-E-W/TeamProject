@@ -337,6 +337,11 @@ public class HangmanServer extends AbstractServer
 			{
 
 			}
+			
+			else if(fromClient.contains("JoinGame:"))
+			{
+
+			}
 
 
 		}

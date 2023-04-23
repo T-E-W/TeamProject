@@ -12,13 +12,13 @@ public class HangmanClientGUI extends JFrame
   
   
   // Constructor that creates the client GUI.
-  public HangmanClientGUI()
+  public HangmanClientGUI(String serverAddress)
   {
   	getContentPane().setBackground(new Color(255, 255, 255));
   	setIconImage(Toolkit.getDefaultToolkit().getImage(HangmanClientGUI.class.getResource("/clientUserInterface/teamLogo.png")));
     // Set up the chat client.
    HangmanClient client = new HangmanClient();
-    client.setHost("localhost");
+    client.setHost(serverAddress);
     client.setPort(8300);
     try
     {
@@ -90,6 +90,15 @@ public class HangmanClientGUI extends JFrame
   // Main function that creates the client GUI when the program is started.
   public static void main(String[] args)
   {
-    new HangmanClientGUI();
+	// Get the server address from a dialog box.
+		  JFrame frame = new JFrame("Hangman Client");
+	      String serverAddress = JOptionPane.showInputDialog(
+	          frame,
+	          "Enter IP Address of the Server:",
+	          "Welcome to Hangman the game",
+	          JOptionPane.QUESTION_MESSAGE);
+	      frame.setVisible(true);
+	    new HangmanClientGUI(serverAddress);
+	    frame.setVisible(false);
   }
 }

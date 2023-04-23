@@ -48,7 +48,14 @@ public class ChooseGameControl implements ActionListener
     else if (command.equals("Join Game"))
     {
     	CardLayout cardLayout = (CardLayout)container.getLayout();
-        cardLayout.show(container, "6");
+        cardLayout.show(container, "5");
+        
+        try {
+    		client.sendToServer("JoinGame:");
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
     }
   }
 }
