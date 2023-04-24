@@ -328,7 +328,7 @@ public class HangmanServer extends AbstractServer
 				}
 			}
 			else if(fromClient.contains("Lose:"))
-			{
+			{				
 				try {
 					arg1.sendToClient("Lose");
 				} catch (IOException e) {
@@ -348,11 +348,7 @@ public class HangmanServer extends AbstractServer
 				}
 				sendToAllClients("GameOver");
 			}
-
-
 		}
-
-
 	}
 
 	// Method that handles listening exceptions by displaying exception information.

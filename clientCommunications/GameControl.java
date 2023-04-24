@@ -94,7 +94,7 @@ public class GameControl implements ActionListener
 		{
 			try
 			{
-				client.sendToServer("Lose:");
+				client.sendToServer("Lose:byGuess");
 			}
 			catch (IOException e)
 			{
@@ -143,6 +143,7 @@ public class GameControl implements ActionListener
 	public void loseScenario() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+		
 		displayError("Loser!!!");
 		gamePanel.setGallows("11");
 		try {
