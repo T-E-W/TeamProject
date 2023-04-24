@@ -61,6 +61,10 @@ public class GameControl implements ActionListener
 				displayError("Error connecting to the server.");
 			}
 		}
+		if(command == "Back") {
+			CardLayout cardLayout = (CardLayout)container.getLayout();
+		    cardLayout.show(container, "4");
+		}
 	}
 
 

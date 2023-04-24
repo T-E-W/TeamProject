@@ -22,12 +22,13 @@ public class GamePanel extends JPanel
 	private String guessStatus = "Guess Status here";
 	private JTextField guessTextField;
 	private int currentGallowPic;
+	
 	private String guess = "";
 	private JButton[] letterButtons;
 	private JLabel[] gameWordLabels;
 	private int counter;
 	private ArrayList<String> correctGuesses = new ArrayList<String>();
-
+	private JButton backButton;
 	public void setGuessStatus(String msg)
 	{
 		guessStatusLabel.setText(msg);
@@ -159,6 +160,7 @@ public class GamePanel extends JPanel
 		centerPanel.setBackground(new Color(255, 255, 255));
 		//FlowLayout flowLayout_3 = (FlowLayout) centerPanel.getLayout();
 		add(centerPanel, BorderLayout.CENTER);
+		
 
 		//panel builder for guess options
 		JPanel guessOptionPanel = new JPanel(new GridLayout(4, 1, 5, 10));
@@ -169,11 +171,14 @@ public class GamePanel extends JPanel
 		guessTextField = new JTextField();
 		guessTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		JButton guessButton = new JButton("Guess");
+		backButton = new JButton("Back");
 		guessButton.addActionListener(gc);
 		guessOptionPanel.add(guessStatusLabel);
 		guessOptionPanel.add(guessTextField);
 		guessOptionPanel.add(guessButton);
-
+		guessOptionPanel.add(backButton);
+		backButton.addActionListener(gc);
+	
 		//panel builder for letter buttons
 		letterButtons = new JButton[26];
 		JPanel buttonPanel = new JPanel(new GridLayout(7, 4, 5, 5));
