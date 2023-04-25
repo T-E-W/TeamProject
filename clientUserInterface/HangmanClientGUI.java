@@ -11,7 +11,7 @@ public class HangmanClientGUI extends JFrame
 {
   
   
-  // Constructor that creates the client GUI.
+  // Constructor that creates the client GUI. = (StartGamePanel)container.getComponent(4);
   public HangmanClientGUI(String serverAddress)
   {
   	getContentPane().setBackground(new Color(255, 255, 255));
@@ -73,6 +73,7 @@ public class HangmanClientGUI extends JFrame
     container.add(view4, "4"); //component 3 ChooseGamePanel
     container.add(view5, "5"); //component 4 StartGamePanel
     container.add(view6, "6"); //component 5 GamePanel
+ 
       
     // Show the initial view in the card layout.
     cardLayout.show(container, "1"); //change here to quickly see a specific GUI

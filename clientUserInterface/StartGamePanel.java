@@ -10,6 +10,7 @@ public class StartGamePanel extends JPanel
 	private int gameWordLength = 8; //will need updating from server
 	private JTextField myWordTextField;
 	private JLabel errorLabel;
+	private JButton startButton; 
 
 	// Setter for the error text.
 	public void setError(String error)
@@ -23,7 +24,17 @@ public class StartGamePanel extends JPanel
 		return myWordTextField.getText();
 	}
 	
-	StartGamePanel(StartGameControl sGc)
+	public JTextField getGuessWordField()
+	{
+		return myWordTextField;
+	}
+	
+	public JButton getStartButton()
+	{
+		return startButton;
+	}
+	
+	public StartGamePanel(StartGameControl sGc)
 	{
 		setBackground(new Color(255, 255, 255));
 
@@ -36,7 +47,7 @@ public class StartGamePanel extends JPanel
 		JLabel instruction2 = new JLabel("Press Start when finished.", JLabel.CENTER);
 		myWordTextField = new JTextField();
 		myWordTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		JButton startButton = new JButton("Start");
+		startButton = new JButton("Start");
 		errorLabel = new JLabel("");
 
 		//add to control
