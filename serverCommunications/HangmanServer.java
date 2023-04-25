@@ -198,6 +198,14 @@ public class HangmanServer extends AbstractServer
 				String guess = fromClient.replace("Guess:","").toLowerCase();
 				Boolean result = false;
 				int index = 0;
+				
+				sendToAllClients("YourTurn");
+				try {
+					arg1.sendToClient("OtherPlayerGoing");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				Long pid = arg1.getId();
 

@@ -136,6 +136,15 @@ public class HangmanClient extends AbstractClient
 			{
 				gameControl.endGame();
 			}
+			else if (message.equals("YourTurn"))
+			{
+				gameControl.displayError("Your Turn");
+			}
+			else if (message.equals("OtherPlayerGoing"))
+			{
+				gameControl.displayError("Waiting on other Player.");
+				
+			}
 
 		}
 
