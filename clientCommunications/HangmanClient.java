@@ -96,6 +96,7 @@ public class HangmanClient extends AbstractClient
 				}
 				else if(msgParts[0].length() > 1 && msgParts[1].equals("true"))
 				{
+					gameControl.displayLetter(msgParts[0], "0,1,2,3,4,5,6,7");
 					gameControl.winScenario();
 					loseFlag = false;
 				}
@@ -143,7 +144,6 @@ public class HangmanClient extends AbstractClient
 			else if (message.equals("OtherPlayerGoing"))
 			{
 				gameControl.displayError("Waiting on other Player.");
-				
 			}
 
 		}

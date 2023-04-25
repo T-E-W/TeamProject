@@ -22,7 +22,7 @@ public class GamePanel extends JPanel
 	private String guessStatus = "Guess Status here";
 	private JTextField guessTextField;
 	private int currentGallowPic;
-	
+
 	private String guess = "";
 	private JButton[] letterButtons;
 	private JLabel[] gameWordLabels;
@@ -47,7 +47,7 @@ public class GamePanel extends JPanel
 		guess = guess + letter;
 		guessTextField.setText(guess);
 	}
-	
+
 	public void setGallows(String gallow)
 	{
 		currentGallowPic = Integer.parseInt(gallow);
@@ -101,32 +101,48 @@ public class GamePanel extends JPanel
 		/*
 		 *  indexes above should contain all indexes of the guesses letter, it is in string format, so casting to integer is necessary.
 		 */
-		for(String i: indexes) {
 
-
-			//			JLabel label = new JLabel(c, JLabel.CENTER);
-			////			 GridBagConstraints GBC = new GridBagConstraints();
-			//			 Border margin = new EmptyBorder(5,5,5,5);
-			//			 label.setBorder(BorderFactory.createLineBorder(Color.black,1,true));
-			//			 
-			//			 label.setFont(new Font("Serif", Font.PLAIN, 42));
-			gameWordLabels[Integer.parseInt(i)].setBorder(javax.swing.BorderFactory.createEmptyBorder());
-			gameWordLabels[Integer.parseInt(i)].setText(c);
-			gameWordLabels[Integer.parseInt(i)].setForeground(Color.black);
-
-			if(!correctGuesses.contains(i)) correctGuesses.add(i);
-
-			if(correctGuesses.size()==8) 
+		String[] ch;
+		if( c.length() > 1)
+		{
+			String[] word = c.split("");
+			for(int i = 0; i < 8; i++)
 			{
-
-				System.out.println("Full Word Revealed");
-				winFlag = true;
-
+				gameWordLabels[i].setBorder(javax.swing.BorderFactory.createEmptyBorder());
+				gameWordLabels[i].setText(word[i]);
+				gameWordLabels[i].setForeground(Color.black);
 			}
 
+		}
+		else
+		{
+			for(String i: indexes) {
 
-			//			gameWordLabels[Integer.parseInt(i)].setHorizontalAlignment(SwingConstants.CENTER);
-			//			gameWordLabels[Integer.parseInt(i)].setVerticalAlignment(SwingConstants.CENTER);
+
+				//			JLabel label = new JLabel(c, JLabel.CENTER);
+				////			 GridBagConstraints GBC = new GridBagConstraints();
+				//			 Border margin = new EmptyBorder(5,5,5,5);
+				//			 label.setBorder(BorderFactory.createLineBorder(Color.black,1,true));
+				//			 
+				//			 label.setFont(new Font("Serif", Font.PLAIN, 42));
+				gameWordLabels[Integer.parseInt(i)].setBorder(javax.swing.BorderFactory.createEmptyBorder());
+				gameWordLabels[Integer.parseInt(i)].setText(c);
+				gameWordLabels[Integer.parseInt(i)].setForeground(Color.black);
+
+				if(!correctGuesses.contains(i)) correctGuesses.add(i);
+
+				if(correctGuesses.size()==8) 
+				{
+
+					System.out.println("Full Word Revealed");
+					winFlag = true;
+
+				}
+
+
+				//			gameWordLabels[Integer.parseInt(i)].setHorizontalAlignment(SwingConstants.CENTER);
+				//			gameWordLabels[Integer.parseInt(i)].setVerticalAlignment(SwingConstants.CENTER);
+			}
 		}
 		return winFlag;
 	}
@@ -180,7 +196,7 @@ public class GamePanel extends JPanel
 		centerPanel.setBackground(new Color(255, 255, 255));
 		//FlowLayout flowLayout_3 = (FlowLayout) centerPanel.getLayout();
 		add(centerPanel, BorderLayout.CENTER);
-		
+
 
 		//panel builder for guess options
 		JPanel guessOptionPanel = new JPanel(new GridLayout(4, 1, 5, 10));
@@ -198,7 +214,7 @@ public class GamePanel extends JPanel
 		guessOptionPanel.add(guessButton);
 		guessOptionPanel.add(backButton);
 		backButton.addActionListener(gc);
-	
+
 		//panel builder for letter buttons
 		letterButtons = new JButton[26];
 		JPanel buttonPanel = new JPanel(new GridLayout(7, 4, 5, 5));
