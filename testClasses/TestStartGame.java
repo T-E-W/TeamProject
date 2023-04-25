@@ -12,16 +12,20 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import clientCommunications.GameControl;
 import clientCommunications.HangmanClient;
 import clientCommunications.StartGameControl;
-
+import clientUserInterface.GamePanel;
 import clientUserInterface.HangmanClientGUI;
 import clientUserInterface.StartGamePanel;
 
 public class TestStartGame {
+	private static HangmanClientGUI gui;
 	private static HangmanClient client;
 	private static StartGamePanel startGamePanel;
 	private static StartGameControl startGameControl;
+	private static GamePanel gamePanel;
+	private static GameControl gameControl;
 	private static JPanel container;
 	private static CardLayout cardLayout;
 	private JButton startButton;
@@ -30,16 +34,20 @@ public class TestStartGame {
 	@BeforeClass
 	public static void setUp()
 	{
-
+		gui = new HangmanClientGUI(null);
 		client = new HangmanClient();
-		cardLayout = new CardLayout();
-		container = new JPanel(cardLayout);
-		container.setBackground(new Color(255, 255, 255));
-		startGameControl = new StartGameControl(container, client);
-
 		client.setStartGameControl(startGameControl);
 
 		startGamePanel = new StartGamePanel(startGameControl);
+		gamePanel = new GamePanel(gameControl);
+		cardLayout = new CardLayout();
+		container = new JPanel(cardLayout);
+		container.setBackground(new Color(255, 255, 255));
+		container.add(startGamePanel, "4");
+		container.add(gamePanel, "5");
+		startGameControl = new StartGameControl(container, client);
+		gameControl = new GameControl(container, client);
+
 
 	}
 	@Before
@@ -54,8 +62,14 @@ public class TestStartGame {
 	@Test
 	public void testGetButtonAt()
 	{
+		
+		cardLayout = (CardLayout)container.getLayout();
+		cardLayout.show(container, "4");
+
+		startButton = startGamePanel.getStartButton();
 		startButton.doClick();
 		assertEquals("Check Button Start", "Start", startButton.getActionCommand());
+		
 	}
 
 	@Test
@@ -82,6 +96,21 @@ public class TestStartGame {
 		String command = ae.getActionCommand();
 		assertEquals("check logout action command", "Logout", command);
 
+	}
+	
+	@Test
+	public void testGuessLetter() {
+		guessWordField.setText("Test");
+		String word = startGamePanel.getWord();
+		
+		gamePanel.setGuessTextField("Test");
+		String guess = gamePanel.getGuess();
+		
+		JButton guessButton = gamePanel.getGuessButton();
+		
+		guessButton.doClick();
+		
+		assertEquals("Check Button Guess", "Guess", guessButton.getActionCommand());
 	}
 
 	@Test

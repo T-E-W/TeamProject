@@ -28,6 +28,7 @@ public class GamePanel extends JPanel
 	private JLabel[] gameWordLabels;
 	private ArrayList<String> correctGuesses = new ArrayList<String>();
 	private JButton backButton;
+	private JButton guessButton;
 	public void setGuessStatus(String msg)
 	{
 		guessStatusLabel.setText(msg);
@@ -82,6 +83,10 @@ public class GamePanel extends JPanel
 			return true;
 		}
 		return true;
+	}
+	public JButton getGuessButton()
+	{
+		return guessButton;
 	}
 	public boolean printLetters(String c, String index)
 	{
@@ -185,7 +190,7 @@ public class GamePanel extends JPanel
 		guessStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		guessTextField = new JTextField();
 		guessTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		JButton guessButton = new JButton("Guess");
+		guessButton = new JButton("Guess");
 		backButton = new JButton("Back");
 		guessButton.addActionListener(gc);
 		guessOptionPanel.add(guessStatusLabel);
