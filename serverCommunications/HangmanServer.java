@@ -348,6 +348,15 @@ public class HangmanServer extends AbstractServer
 				}
 				sendToAllClients("GameOver");
 			}
+			else if(fromClient.equals("GameEnded"))
+			{
+				sendToAllClients("GameEnded");
+				
+				for (User u:onlinePlayers)
+				{
+					u.setWord("");
+				}
+			}
 		}
 	}
 

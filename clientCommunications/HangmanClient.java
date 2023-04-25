@@ -132,9 +132,9 @@ public class HangmanClient extends AbstractClient
 					gameControl.loseScenario();
 				}
 			}
-			else if (message.contains("Win"))
+			else if (message.contains("GameEnded"))
 			{
-				
+				gameControl.endGame();
 			}
 
 		}

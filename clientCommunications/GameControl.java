@@ -46,6 +46,7 @@ public class GameControl implements ActionListener
 			}
 
 			String guessString = "Guess:" + gamePanel.getGuess();
+			gamePanel.setGuessTextField("");
 			System.out.println(guessString);
 
 
@@ -63,7 +64,14 @@ public class GameControl implements ActionListener
 		}
 		if(command == "Back") {
 			CardLayout cardLayout = (CardLayout)container.getLayout();
-		    cardLayout.show(container, "4");
+			cardLayout.show(container, "4");
+
+			try {
+				client.sendToServer("GameEnded");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -115,8 +123,8 @@ public class GameControl implements ActionListener
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
 		boolean winFlag = false;
 		winFlag = gamePanel.printLetters(string, indexes);
-		
-		
+
+
 		if (winFlag == true) {
 			try
 			{
@@ -147,7 +155,7 @@ public class GameControl implements ActionListener
 	public void loseScenario() {
 		// TODO Auto-generated method stub
 		GamePanel gamePanel = (GamePanel)container.getComponent(5);
-		
+
 		displayError("Loser!!!");
 		gamePanel.setGallows("11");
 		try {
@@ -156,6 +164,17 @@ public class GameControl implements ActionListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void endGame() {
+		// TODO Auto-generated method stub
+		
+		GamePanel gamePanel = (GamePanel)container.getComponent(5);
+		gamePanel.setGallows("0");
+		counter = 0;
+		
+		CardLayout cardLayout = (CardLayout)container.getLayout();
+		cardLayout.show(container, "4");
 	}
 
 

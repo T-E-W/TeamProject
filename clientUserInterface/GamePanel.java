@@ -26,7 +26,6 @@ public class GamePanel extends JPanel
 	private String guess = "";
 	private JButton[] letterButtons;
 	private JLabel[] gameWordLabels;
-	private int counter;
 	private ArrayList<String> correctGuesses = new ArrayList<String>();
 	private JButton backButton;
 	public void setGuessStatus(String msg)
@@ -39,12 +38,29 @@ public class GamePanel extends JPanel
 	}
 	public void setGuessTextField(String letter)
 	{
+		if(letter == "")
+		{
+			guessTextField.setText(letter);
+			return;
+		}
 		guess = guess + letter;
 		guessTextField.setText(guess);
 	}
+	
 	public void setGallows(String gallow)
 	{
+		currentGallowPic = Integer.parseInt(gallow);
 		gallows.setIcon(new ImageIcon(ChooseGamePanel.class.getResource("/clientUserInterface/" + gallow + ".jpg")));
+		if (gallow.equals("0"))
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				gameWordLabels[i].setBorder(javax.swing.BorderFactory.createLineBorder(Color.black,2));
+				gameWordLabels[i].setText("?");
+				gameWordLabels[i].setForeground(Color.red);
+				gameWordLabels[i].setFont(new Font("Serif", Font.PLAIN, 48));
+			}
+		}
 	}
 
 	public void loseGame()
@@ -116,7 +132,6 @@ public class GamePanel extends JPanel
 		setBackground(new Color(255, 255, 255));
 		int i = 0;
 		setLayout(new BorderLayout(0, 0));
-		counter = 0;
 		//panel for title
 		JPanel northPanel = new JPanel();
 		northPanel.setBackground(new Color(255, 255, 255));
