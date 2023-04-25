@@ -1,4 +1,4 @@
-package startGameTests;
+package hangmanTests;
 
 import static org.junit.Assert.*;
 

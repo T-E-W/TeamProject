@@ -26,6 +26,16 @@ public class LoginPanel extends JPanel
     return new String(passwordField.getPassword());
   }
   
+  public void setUsername(String username)
+  {
+	  usernameField.setText(username);
+  }
+  
+  public void setPassword(String password)
+  {
+	  passwordField.setText(password);
+  }
+  
   // Setter for the error text.
   public void setError(String error)
   {
