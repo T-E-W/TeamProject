@@ -1,4 +1,4 @@
-package testClasses;
+package startGameTests;
 
 import static org.junit.Assert.*;
 
@@ -19,7 +19,7 @@ import clientUserInterface.GamePanel;
 import clientUserInterface.HangmanClientGUI;
 import clientUserInterface.StartGamePanel;
 
-public class TestStartGame {
+public class StartGameTest {
 	private static HangmanClientGUI gui;
 	private static HangmanClient client;
 	private static StartGamePanel startGamePanel;
